@@ -18,7 +18,6 @@ function App() {
       <Navbar />
     <div className="flex justify-center">
     <Cards CoinsData={Coins}/>
-    {/* <Trending CoinsData={Coins}/> */}
     </div>
     </>
   );

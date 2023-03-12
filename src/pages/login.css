@@ -1,0 +1,11 @@
+.error{
+    background-color: rgb(255, 255, 255);
+    font-size: medium;
+    color: black;
+    height: 30px;
+    text-align: center;
+    border-radius: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+
+}
