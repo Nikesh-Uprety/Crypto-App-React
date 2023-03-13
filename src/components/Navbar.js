@@ -10,7 +10,7 @@ const Navbar = ({ user }) => {
   const SignOut = () => {
     signOut(auth);
   }
-  console.log(user)
+ 
   return (
     <>
 

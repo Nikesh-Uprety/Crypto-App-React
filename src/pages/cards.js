@@ -29,7 +29,8 @@ const Cards = ({ CoinsData}) => {
           else setuser(null);
         });
       }, []);
-    //  console.log(user)
+      
+  
     useEffect(() => {
         if (searchbox.length > 0) {
             const timeoutId = setTimeout(() => {
