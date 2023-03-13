@@ -2,11 +2,16 @@ import { useState, useEffect } from "react"
 import {auth} from '../index'
 import { onAuthStateChanged } from "firebase/auth";
 import Navbar from "../components/Navbar";
+import NewNavbar from "../components/NewNavbar";
+
 
 
 function Main({users}) {
   return (
-    <Navbar user={users}/>
+    <div>
+        
+        <Navbar user={users}/>
+    </div>
   )
 }
 

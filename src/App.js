@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
+import NewNavbar from "./components/NewNavbar";
 import Cards from "./pages/cards";
 
 function App() {
