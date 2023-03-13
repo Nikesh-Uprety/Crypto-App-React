@@ -4,6 +4,8 @@ import './index.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
 import About from './pages/about';
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import { initializeApp } from "firebase/app";
@@ -22,6 +24,9 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+
+export const auth = getAuth(app); // For Authentication
+export const db = getFirestore(app);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

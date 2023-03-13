@@ -3,6 +3,8 @@ import './login.css'
 import { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import GoogleButton from "react-google-button";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {auth} from '../index'
 
 export default function Login() {
     let [email, setemail] = useState("");
@@ -14,12 +16,23 @@ export default function Login() {
     const logIn = async () => {
         try {
             await signInWithEmailAndPassword(getAuth(), email, password);
-            navigate('/home');
+            navigate('/');
         } catch (e) {
             seterror(e.message);
         }
     }
-    console.log(Login);
+    const googleProvider = new GoogleAuthProvider();
+    const signInWithGoogle = () => {
+        signInWithPopup(auth, googleProvider)
+          .then((res) => {
+            navigate('/');
+           console.log(`Sign Up Successful. Welcome ${res.user.email}`);
+          })
+          .catch((error) => {
+            console.log(error);
+            return;
+          });
+      };
     return (
         <div><section className="">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -44,7 +57,9 @@ export default function Login() {
                             <button onClick={logIn} className="w-full text-white
                              border-2 border-white  h-10 rounded-sm">Sign in</button>
                             <p className=" text-white">OR</p>
-                            <GoogleButton />
+                           
+                            <GoogleButton  onClick={signInWithGoogle} style={{ width: "100%", outline: "none" }}/>
+                            
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                 Don’t have an account yet?
                                 <Link to="/signup">

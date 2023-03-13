@@ -1,13 +1,22 @@
-import { Link } from "react-router-dom"
-const Navbar=()=>{
+import { Link } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import {auth} from '../index';
+
+
+const Navbar=({user})=>{
+
+  const SignOut=()=>{
+    signOut(auth);
+  }
     return(
-        
+      
 <nav className="bg-black px-2 sm:px-4 py-2.5 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
   <div className="container flex flex-wrap items-center justify-between mx-auto">
   <a href="/home" className="flex items-center">
-      <img src="https://yt3.ggpht.com/yti/AHXOFjXDxlpJaOKwfBrJqnH7JH27ffV7h2mM_uZEznz5nSQ=s108-c-k-c0x00ffffff-no-rj" className="h-6 mr-3 sm:h-9 rounded-full " alt="Flowbite Logo"/>
+      <img src="https://yt3.ggpht.com/yti/AHXOFjXDxlpJaOKwfBrJqnH7JH27ffV7h2mM_uZEznz5nSQ=s108-c-k-c0x00ffffff-no-rj" className="h-6 mr-3 sm:h-9 rounded-full " alt="NikuCoinCap"/>
       <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">NikuCoinCap</span>
   </a>
+  
   <div className="flex md:order-2">
       
       <button data-collapse-toggle="navbar-sticky" type="button" className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false">
@@ -30,11 +39,22 @@ const Navbar=()=>{
       <li>
         <a href="https://github.com/Nikesh-Uprety/Crypto-App-React.git" target="_blank" className="block py-2 pl-3 pr-4 text-gray-700 rounded text-xl hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Source</a>
       </li>
-      <li>
+      {user ? (<><li>
+                <Link to=''>
+                  <button href="#" className="block py-2 pl-3 pr-4 ml-40 text-gray-700 rounded text-xl hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">{user.displayName ? user.displayName : user.email}
+                    <img src={user.photoURL} className="h-6 sm:h-9  rounded-full " alt={user.displayName} />
+                  </button>
+
+                </Link>
+              </li><li>
+                  <button onClick={SignOut} className="block py-2 pl-3 pr-4 text-gray-700 rounded text-xl hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Logout</button>
+                </li></>
+      ):(<li>
         <Link to='/login'>
         <button href="#" className="block py-2 pl-3 pr-4 ml-40 text-gray-700 rounded text-xl hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">login</button>
         </Link>
-      </li>
+      </li>)}
+      
     </ul>
   </div>
   </div>

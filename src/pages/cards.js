@@ -1,9 +1,30 @@
 import { useState, useEffect } from "react"
-const Cards = ({ CoinsData }) => {
+import {auth} from '../index'
+import { onAuthStateChanged } from "firebase/auth";
+import Navbar from "../components/Navbar";
+
+
+function Main({users}) {
+  return (
+    <Navbar user={users}/>
+  )
+}
+
+
+const Cards = ({ CoinsData}) => {
 
     let [searchcoins, setsearchcoins] = useState([]);
     let [searchbox, setsearchbox] = useState('');
+    let [user,setuser]=useState(null);
+    
 
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+          if (user) setuser(user);
+          else setuser(null);
+        });
+      }, []);
+    //  console.log(user)
     useEffect(() => {
         if (searchbox.length > 0) {
             const timeoutId = setTimeout(() => {
@@ -19,7 +40,9 @@ const Cards = ({ CoinsData }) => {
     }, [searchcoins])
     // console.log(searchcoins);    
     // if(!searchbox) return <div>No Any Result</div>;
+
     return (
+        
         <>
             <div className="w-full p-4 mt-24 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex items-center justify-between mb-4">
@@ -28,6 +51,9 @@ const Cards = ({ CoinsData }) => {
                         {/* {
                             searchbox.length > 0 ? 'Searched Result' : 'Search Bar is Empty'
                         } */}
+                    </h5>
+                    <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                        {/* {user ? `Welcome ${user.email}` : ""} */}
                     </h5>
                     <form>
                         <div className="flex">
@@ -109,6 +135,7 @@ const Cards = ({ CoinsData }) => {
                     </ul>
                 </div>
             </div>
+            <Main users={user}/>
 
         </>
 
