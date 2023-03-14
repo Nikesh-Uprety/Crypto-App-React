@@ -1,23 +1,17 @@
 import { Link } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { auth } from '../index';
-import LoginModal from "../modal/loginmodal";
-import Signupmodal from "../modal/signupmodal";
-import "./Navbar.css";
+import Sidebar from "./Sidebar";
 
 const Navbar = ({ user }) => {
 
-  const SignOut = () => {
-    signOut(auth);
-  }
- 
+
+ console.log(user)
   return (
     <>
 
     <nav className="bg-black px-2 sm:px-4 py-2. bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 border-gray-700">
       <div className="container flex flex-wrap items-center justify-between ">
         <a href="/" className="flex items-center">
-          <img src="https://yt3.ggpht.com/yti/AHXOFjXDxlpJaOKwfBrJqnH7JH27ffV7h2mM_uZEznz5nSQ=s108-c-k-c0x00ffffff-no-rj" className="h-6 mr-3 sm:h-9 rounded-full " alt="NikuCoinCap" />
+          <img src="https://yt3.ggpht.com/yti/AHXOFjXDxlpJaOKwfBrJqnH7JH27ffV7h2mM_uZEznz5nSQ=s88-c-k-c0x00ffffff-no-rj-mo" className="h-6 mr-3 sm:h-9 rounded-full " alt="NikuCoinCap" />
           <span className="self-center text-xl font-semibold whitespace-nowrap text-white">NikuCoinCap</span>
         </a>
 
@@ -43,22 +37,11 @@ const Navbar = ({ user }) => {
             <li>
               <a href="https://github.com/Nikesh-Uprety/Crypto-App-React.git" target="_blank" className="block py-2 pl-3 pr-4 rounded text-xl text-white">Source</a>
             </li>
-            {user ? (<>
-              <Link to=''>
-                <button href="#" className="block py-2 pl-3 pr-4 ml-40 rounded text-xl text-white">{user.displayName ? user.displayName : user.email}
-                  <img src={user.photoURL} className=" h-12 w-12 user-photo rounded-full"/>
-                </button>
-              </Link>
-              <button onClick={SignOut} className="block py-2 pl-3 pr-4 rounded text-xl text-white">Logout</button>
-            </>
-            ) : (
-        <>
-                    <LoginModal />
-                    <Signupmodal/>
-                    </>
-                    
-            )}
-
+            <li className="block py-2 pl-3 pr-4 text-xl text-white">
+              
+              <Sidebar user={user} />
+            </li>
+            
           </ul>
         </div>
       </div>
