@@ -8,7 +8,7 @@ function LoginModal() {
     const [openlogin, setOpenlogin] = useState(false);
     const handleOpenlogin = () => setOpenlogin(true);
     const handleCloselogin = () => setOpenlogin(false);
-  
+
     const style = {
       position: 'absolute',
       top: '50%',

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Drawer from '@mui/material/Drawer';
-
 import { Avatar, Button } from '@mui/material';
 import { auth } from "../index"
 import { signOut } from 'firebase/auth';
@@ -21,6 +20,7 @@ const Sidebar = ({ user }) => {
 
         setState({ ...state, [anchor]: open });
     };
+    console.log(user);
 
     return (
         <div>
@@ -33,7 +33,8 @@ const Sidebar = ({ user }) => {
                             width: "38",
                         }}
                         src={user.photoURL}
-                        alt={user.DisplayName || user.email} /><Drawer
+                        alt={user.DisplayName || user.email} />
+                        <Drawer
                             anchor={anchor}
                             open={state[anchor]}
                             onClose={toggleDrawer(anchor, false)}
@@ -66,7 +67,8 @@ const Sidebar = ({ user }) => {
                                             objectFit: "contain",
                                         }}
                                         src={user.photoURL}
-                                        alt={user.displayName || user.email} />
+                                        alt={user.displayName || user.email} 
+                                        />
                                     <span
                                         style={{
                                             width: "100%",

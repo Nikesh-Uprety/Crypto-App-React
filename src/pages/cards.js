@@ -1,10 +1,25 @@
 import { useState, useEffect } from "react"
+import { Button } from "@mui/material";
+import { doc, setDoc } from "firebase/firestore";
+import {db} from '../index';
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
-const Cards = ({ CoinsData}) => {
-
+const Cards = ({ CoinsData, user}) => {
+const { id } = useParams();
 const [searchQuery, setSearchQuery] = useState("");
 const [searchCoins, setSearchCoins] = useState([]);
+const [watchlist, setwatchlist] = useState([]);
 
+// const [coin, setCoin] = useState();
+
+// const fetchCoin = async () => {
+//     const { data } = await axios.get( `https://api.coingecko.com/api/v3/coins/ethereum `);
+
+//     setCoin(data);
+//   };
+
+//   console.log(coin)
 useEffect(() => {
     if (searchQuery.length > 0) {
             fetch(`https://api.coingecko.com/api/v3/search?query=${searchQuery}`)
@@ -15,8 +30,29 @@ useEffect(() => {
     }
 }, [searchQuery]);
 
-console.log(searchCoins);   
 
+// const inWatchlist = watchlist.includes(coinId?.id);
+
+const addToWatchlist = (event, coinId) => {
+  const coinRef = doc(db, "watchlist", user.uid);
+  try{
+    event.preventDefault();
+       setDoc(
+        coinRef,
+        { Coins: watchlist ? [...watchlist, coinId] : [coinId] },
+        { merge: true }
+        
+        );
+      console.log(`Successfully Added ${coinId}` )
+  }catch(e){
+    console.log(e);
+  }
+    }
+
+    // useEffect(() => {
+    //     fetchCoin();
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    //   }, []);
     return (
         
         <>
@@ -24,12 +60,8 @@ console.log(searchCoins);
                 <div className="flex items-center justify-between mb-4">
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
                         Cryptos
-                        {/* {
-                            searchbox.length > 0 ? 'Searched Result' : 'Search Bar is Empty'
-                        } */}
                     </h5>
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                        {/* {user ? `Welcome ${user.email}` : ""} */}
                     </h5>
                     <form>
                         <div className="flex">
@@ -49,9 +81,6 @@ console.log(searchCoins);
                 <div className="flow-root">
                     <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
                         {
-                            // searchbox.length > 0 & searchcoins.length === 0 ? (
-                            //     <p className="text-white">No search result found</p>
-                            // ) : (
                             searchQuery.length === 0 ? (
                                 CoinsData.map((coin) => (
                                     <li className="py-3 sm:py-4" key={coin.id}>
@@ -65,7 +94,21 @@ console.log(searchCoins);
                                                 </p>
                                                 <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                                                     Current Market Rank: {coin.market_cap_rank}
-                                                </p>                             
+                                                </p>    
+                                                {
+                                                    user?(<Button variant="outlined"  onClick={(event) => addToWatchlist(event, coin.id)} style={{
+                                                        color:"#ffa500",
+                                                        border:"1px solid white"
+                                                    }} >
+                                                        "Add to Watchlist"
+                                                         {/* {inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"} */}
+                                                    </Button>):(<Button variant="outlined" style={{
+                                                        color:"#ffa500",
+                                                        border:"1px solid white"
+                                                    }} >Login To Add to Watchlist</Button>)
+                                                }      
+                                                
+
                                             </div>
                                             {
                                                coin.market_cap_change_percentage_24h > 0 ?(
