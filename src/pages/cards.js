@@ -1,61 +1,82 @@
 import { useState, useEffect } from "react"
 import { Button } from "@mui/material";
-import { doc, setDoc } from "firebase/firestore";
-import {db} from '../index';
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { db } from '../index';
 import axios from "axios";
+import Sidebar from "../components/Sidebar";
 import { useParams } from "react-router-dom";
 
-const Cards = ({ CoinsData, user}) => {
-const { id } = useParams();
-const [searchQuery, setSearchQuery] = useState("");
-const [searchCoins, setSearchCoins] = useState([]);
-const [watchlist, setwatchlist] = useState([]);
+const Cards = ({ CoinsData, user }) => {
 
-// const [coin, setCoin] = useState();
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchCoins, setSearchCoins] = useState([]);
+    const [watchList, setWatchlist] = useState([]);
+    // const [coin, setCoin] = useState();
 
-// const fetchCoin = async () => {
-//     const { data } = await axios.get( `https://api.coingecko.com/api/v3/coins/ethereum `);
-
-//     setCoin(data);
-//   };
-
-//   console.log(coin)
-useEffect(() => {
-    if (searchQuery.length > 0) {
+    // For Search Function
+    useEffect(() => {
+        if (searchQuery.length > 0) {
             fetch(`https://api.coingecko.com/api/v3/search?query=${searchQuery}`)
                 .then(response => response.json())
                 .then(data => setSearchCoins(data.coins));
-    } else {
-        setSearchCoins([]);
+        } else {
+            setSearchCoins([]);
+        }
+    }, [searchQuery]);
+
+    // const inWatchlist = watchList.includes("bitcoin");
+    const addToWatchlist = async (event, coin) => {
+        const coinRef = doc(db, "watchlist", user.uid);
+        try {
+            await setDoc(
+                coinRef,
+                { Coins: watchList ? [...watchList, coin] : [coin] },
+                { merge: true }
+            );
+            console.log(`Successfully Added ${coin}`)
+        } catch (e) {
+            console.log(e);
+        }
     }
-}, [searchQuery]);
 
+useEffect(() => {
+    if (user) {
+      const coinRef = doc(db, "watchlist", user?.uid);
+      var unsubscribe = onSnapshot(coinRef, (coin) => {
+        if (coin.exists()) {
+          console.log(coin.data().Coins);
+          setWatchlist(coin.data().Coins);
+        } else {
+          console.log("No Items in Watchlist");
+        }
+      });
 
-// const inWatchlist = watchlist.includes(coinId?.id);
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [user])
 
-const addToWatchlist = (event, coinId) => {
-  const coinRef = doc(db, "watchlist", user.uid);
-  try{
-    event.preventDefault();
-       setDoc(
+ // For removing the Coins from the watchList, Not implemented yet!!!!
+  const removeFromWatchlist = async (event, coin) => {
+    const coinRef = doc(db, "watchlist", user.uid);
+    try {
+      await setDoc(
         coinRef,
-        { Coins: watchlist ? [...watchlist, coinId] : [coinId] },
+        { coins: watchList.filter((wish) => wish !== coin) },
         { merge: true }
-        
-        );
-      console.log(`Successfully Added ${coinId}` )
-  }catch(e){
-    console.log(e);
-  }
-    }
+      );
 
-    // useEffect(() => {
-    //     fetchCoin();
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    //   }, []);
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+
     return (
-        
+
         <>
+        <Sidebar watchList={watchList} />
             <div className="w-full p-4 mt-24 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex items-center justify-between mb-4">
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
@@ -94,33 +115,35 @@ const addToWatchlist = (event, coinId) => {
                                                 </p>
                                                 <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                                                     Current Market Rank: {coin.market_cap_rank}
-                                                </p>    
+                                                </p>
                                                 {
-                                                    user?(<Button variant="outlined"  onClick={(event) => addToWatchlist(event, coin.id)} style={{
-                                                        color:"#ffa500",
-                                                        border:"1px solid white"
-                                                    }} >
-                                                        "Add to Watchlist"
-                                                         {/* {inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"} */}
-                                                    </Button>):(<Button variant="outlined" style={{
-                                                        color:"#ffa500",
-                                                        border:"1px solid white"
+                                                    user ? (<>
+                                                        <Button variant="outlined" onClick={(event) => addToWatchlist(event, coin.id)} style={{
+                                                            color: "#ffa500",
+                                                            border: "1px solid white"
+                                                        }}>
+                                                            Add to Watchlist
+                                                            {/* {inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"} */}
+                                                        </Button>
+                                                    </>
+                                                    ) : (<Button variant="outlined" style={{
+                                                        color: "#ffa500",
+                                                        border: "1px solid white"
                                                     }} >Login To Add to Watchlist</Button>)
-                                                }      
-                                                
+                                                }
 
                                             </div>
                                             {
-                                               coin.market_cap_change_percentage_24h > 0 ?(
-                                                <div className="inline-flex items-center text-base font-semibold text-green-700 ">
-                                                {coin.market_cap_change_percentage_24h.toFixed(2)} %
-                                           </div>
-                                           ):(
-                                            <div className="inline-flex items-center text-base font-semibold text-red-500">
-                                                
-                                                 {coin.market_cap_change_percentage_24h.toFixed(2)} %
-                                            </div>
-                                           )
+                                                coin.market_cap_change_percentage_24h > 0 ? (
+                                                    <div className="inline-flex items-center text-base font-semibold text-green-700 ">
+                                                        {coin.market_cap_change_percentage_24h.toFixed(2)} %
+                                                    </div>
+                                                ) : (
+                                                    <div className="inline-flex items-center text-base font-semibold text-red-500">
+
+                                                        {coin.market_cap_change_percentage_24h.toFixed(2)} %
+                                                    </div>
+                                                )
                                             }
                                             <div className="inline-flex items-center pl-10 text-base font-semibold text-gray-900 dark:text-white">
                                                 $ {coin.current_price}

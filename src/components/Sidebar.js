@@ -1,18 +1,18 @@
 import * as React from 'react';
 import Drawer from '@mui/material/Drawer';
-import { Avatar, Button } from '@mui/material';
+import { Avatar, Button, listClasses } from '@mui/material';
 import { auth } from "../index"
 import { signOut } from 'firebase/auth';
 import LoginModal from '../modal/loginmodal';
 
-const Sidebar = ({ user }) => {
+const Sidebar = ({ user, watchList, CoinsData }) => {
     const SignOut = () => {
         signOut(auth);
     }
     const [state, setState] = React.useState({
         right: false,
     });
-
+console.log(watchList)
     const toggleDrawer = (anchor, open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return;
@@ -20,8 +20,7 @@ const Sidebar = ({ user }) => {
 
         setState({ ...state, [anchor]: open });
     };
-    console.log(user);
-
+    
     return (
         <div>
             {['right'].map((anchor) => (
@@ -67,8 +66,8 @@ const Sidebar = ({ user }) => {
                                             objectFit: "contain",
                                         }}
                                         src={user.photoURL}
-                                        alt={user.displayName || user.email} 
-                                        />
+                                        alt={user.displayName || user.email}
+                                    />
                                     <span
                                         style={{
                                             width: "100%",
@@ -95,27 +94,50 @@ const Sidebar = ({ user }) => {
                                     }}
 
                                     >
-                                        <span style={{ fontSize: 15, textShadow: "0 0 5px black" }}>
+                                        <span style={{ fontSize: 25, }}>
                                             Watchlist
                                         </span>
-                                        {/* {coins.map((coin) => {
-if (watchlist.includes(coin.id))
-return (
-<div className={classes.coin}>
-<span>{coin.name}</span>
-<span style={{ display: "flex", gap: 8 }}>
-{symbol}{" "}
-{numberWithCommas(coin.current_price.toFixed(2))}
-<AiFillDelete
-style={{ cursor: "pointer" }}
-fontSize="16"
-onClick={() => removeFromWatchlist(coin)}
-/>
-</span>
-</div>
-);
-else return <></>;
-})} */}
+                                       
+                                 
+                                        {CoinsData.map((coin) => {
+                                            
+                                            // return (
+                                            //     <div style={{
+                                            //         padding: 10,
+                                            //         borderRadius: 5,
+                                            //         color: "black",
+                                            //         width: "100%",
+                                            //         display: "flex",
+                                            //         justifyContent: "space-between",
+                                            //         alignItems: "center",
+                                            //         backgroundColor: "#EEBC1D",
+                                            //         boxShadow: "0 0 3px black",
+                                            //     }}>
+                                            //         <span>{coin.name}</span>
+                                            //     </div>
+                                            // )
+
+                                            if (watchList?.includes(coin?.id))
+                                                return (
+                                                    <div style={{
+                                                                padding: 10,
+                                                                borderRadius: 5,
+                                                                color: "black",
+                                                                width: "100%",
+                                                                display: "flex",
+                                                                justifyContent: "space-between",
+                                                                alignItems: "center",
+                                                                backgroundColor: "#EEBC1D",
+                                                                boxShadow: "0 0 3px black",
+                                                            }}>
+                                                        Bitcoin
+                                                        
+                                                    </div>
+                                                );
+                                            else return <></>;
+                                        })}
+
+
                                     </div>
                                 </div>
                                 <Button

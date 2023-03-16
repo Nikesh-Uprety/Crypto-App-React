@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 
-const Navbar = ({ user }) => {
+const Navbar = ({ user,CoinsData }) => {
 
 
  console.log(user)
@@ -39,7 +39,7 @@ const Navbar = ({ user }) => {
             </li>
             <li className="block py-2 pl-3 pr-4 text-xl text-white">
               
-              <Sidebar user={user} />
+              <Sidebar user={user} CoinsData={CoinsData}/>
             </li>
             
           </ul>

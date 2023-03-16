@@ -23,7 +23,7 @@ function App() {
 console.log(user)
   return (
     <> 
-    <Navbar user={user}/>
+    <Navbar user={user} CoinsData={Coins}/>
     <div className="flex justify-center">
     <Cards 
     CoinsData={Coins}
