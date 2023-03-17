@@ -1,17 +1,16 @@
 import { useState, useEffect } from "react"
 import { Button } from "@mui/material";
-import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from '../index';
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
-import { useParams } from "react-router-dom";
 
-const Cards = ({ CoinsData, user }) => {
+
+const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlist}) => {
 
     const [searchQuery, setSearchQuery] = useState("");
     const [searchCoins, setSearchCoins] = useState([]);
-    const [watchList, setWatchlist] = useState([]);
-    // const [coin, setCoin] = useState();
+    
 
     // For Search Function
     useEffect(() => {
@@ -24,63 +23,16 @@ const Cards = ({ CoinsData, user }) => {
         }
     }, [searchQuery]);
 
-    // const inWatchlist = watchList.includes("bitcoin");
-    const addToWatchlist = async (event, coin) => {
-        const coinRef = doc(db, "watchlist", user.uid);
-        try {
-            await setDoc(
-                coinRef,
-                { Coins: watchList ? [...watchList, coin] : [coin] },
-                { merge: true }
-            );
-            console.log(`Successfully Added ${coin}`)
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-useEffect(() => {
-    if (user) {
-      const coinRef = doc(db, "watchlist", user?.uid);
-      var unsubscribe = onSnapshot(coinRef, (coin) => {
-        if (coin.exists()) {
-          console.log(coin.data().Coins);
-          setWatchlist(coin.data().Coins);
-        } else {
-          console.log("No Items in Watchlist");
-        }
-      });
-
-      return () => {
-        unsubscribe();
-      };
-    }
-  }, [user])
-
- // For removing the Coins from the watchList, Not implemented yet!!!!
-  const removeFromWatchlist = async (event, coin) => {
-    const coinRef = doc(db, "watchlist", user.uid);
-    try {
-      await setDoc(
-        coinRef,
-        { coins: watchList.filter((wish) => wish !== coin) },
-        { merge: true }
-      );
-
-    } catch (error) {
-      console.log(error)
-    }
-  };
-
-
     return (
 
         <>
-        <Sidebar watchList={watchList} />
+                
             <div className="w-full p-4 mt-24 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex items-center justify-between mb-4">
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                        Cryptos
+                        Watchlist list 
+                        
+                       
                     </h5>
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
                     </h5>
@@ -94,6 +46,7 @@ useEffect(() => {
                                 </button>
                                 <h5 className="text-xl font-bold leading-none pt-2 pl-12 text-gray-900 dark:text-white">
                                     Change in Vol-24 / Current Price
+                 
                                 </h5>
                             </div>
                         </div>
@@ -118,12 +71,11 @@ useEffect(() => {
                                                 </p>
                                                 {
                                                     user ? (<>
-                                                        <Button variant="outlined" onClick={(event) => addToWatchlist(event, coin.id)} style={{
-                                                            color: "#ffa500",
+                                                        <Button variant="outlined" onClick={watchList.includes(coin.id) ?(event) => removeFromWatchlist(event, coin.id) : (event) => addToWatchlist(event, coin.id)} style={{
+                                                            color:  watchList.includes(coin.id) ? "#FF0000" : "#ffa500", 
                                                             border: "1px solid white"
                                                         }}>
-                                                            Add to Watchlist
-                                                            {/* {inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"} */}
+                                                            {watchList.includes(coin.id) ? "Remove from Watchlist" : "Add to Watchlist"}
                                                         </Button>
                                                     </>
                                                     ) : (<Button variant="outlined" style={{

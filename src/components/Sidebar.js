@@ -1,9 +1,10 @@
 import * as React from 'react';
 import Drawer from '@mui/material/Drawer';
 import { Avatar, Button, listClasses } from '@mui/material';
-import { auth } from "../index"
+import { auth, db } from "../index"
 import { signOut } from 'firebase/auth';
 import LoginModal from '../modal/loginmodal';
+import { doc, getDoc } from 'firebase/firestore';
 
 const Sidebar = ({ user, watchList, CoinsData }) => {
     const SignOut = () => {
@@ -12,7 +13,7 @@ const Sidebar = ({ user, watchList, CoinsData }) => {
     const [state, setState] = React.useState({
         right: false,
     });
-console.log(watchList)
+
     const toggleDrawer = (anchor, open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return;
@@ -20,7 +21,7 @@ console.log(watchList)
 
         setState({ ...state, [anchor]: open });
     };
-    
+
     return (
         <div>
             {['right'].map((anchor) => (
@@ -97,27 +98,9 @@ console.log(watchList)
                                         <span style={{ fontSize: 25, }}>
                                             Watchlist
                                         </span>
-                                       
-                                 
                                         {CoinsData.map((coin) => {
-                                            
-                                            // return (
-                                            //     <div style={{
-                                            //         padding: 10,
-                                            //         borderRadius: 5,
-                                            //         color: "black",
-                                            //         width: "100%",
-                                            //         display: "flex",
-                                            //         justifyContent: "space-between",
-                                            //         alignItems: "center",
-                                            //         backgroundColor: "#EEBC1D",
-                                            //         boxShadow: "0 0 3px black",
-                                            //     }}>
-                                            //         <span>{coin.name}</span>
-                                            //     </div>
-                                            // )
-
-                                            if (watchList?.includes(coin?.id))
+                                        
+                                          if (watchList.includes(coin.id))
                                                 return (
                                                     <div style={{
                                                                 padding: 10,
@@ -130,7 +113,8 @@ console.log(watchList)
                                                                 backgroundColor: "#EEBC1D",
                                                                 boxShadow: "0 0 3px black",
                                                             }}>
-                                                        Bitcoin
+                                                        {coin.name}
+                                                        
                                                         
                                                     </div>
                                                 );
