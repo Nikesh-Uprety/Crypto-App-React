@@ -28,6 +28,11 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
                         Popular Cryptos
                        
                     </h5>
+                    <Button variant="outlined" style={{
+                                                        color: "#ffa500",
+                                                        border: "1px solid white",
+                                                       
+                                                    }} >Login to Add to WatchList</Button>
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
                     </h5>
                     <form>
@@ -51,35 +56,34 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
                         {
                             searchQuery.length === 0 ? (
                                 CoinsData.map((coin) => (
-                                    <li className="py-3 sm:py-4" key={coin.id}>
-                                        <div className="flex items-center space-x-4">
+                                    <li className="py-1 sm:py-4" key={coin.id}>
+                                        <div className="flex items-center">
                                             <div className="flex-shrink-0">
                                                 <img src={coin.image} className="w-8 h-8 rounded-full" alt={coin.name} />
                                             </div>
-                                            <div className="flex-1 min-w-0">
+                                            <div className="flex-1 min-w-0 ">
                                                 <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                                                     {coin.name}
                                                 </p>
                                                 <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                                                     Current Market Rank: {coin.market_cap_rank}
                                                 </p>
+                                            </div>
+
                                                 
                                                 {
                                                     user ? (<>
                                                         <Button variant="outlined" onClick={watchList.includes(coin.id) ?(event) => removeFromWatchlist(event, coin.id) : (event) => addToWatchlist(event, coin.id)} style={{
                                                             color:  watchList.includes(coin.id) ? "#FF0000" : "#ffa500", 
-                                                            border: "1px solid white"
+                                                            border: "1px solid white",
+                                                            width:"20px",
                                                         }}>
                                                             {watchList.includes(coin.id) ? "Remove from Watchlist" : "Add to Watchlist"}
                                                         </Button>
                                                     </>
-                                                    ) : (<Button variant="outlined" style={{
-                                                        color: "#ffa500",
-                                                        border: "1px solid white"
-                                                    }} >Login To Add to Watchlist</Button>)
+                                                    ) : ("")
                                                 }
 
-                                            </div>
                                             {
                                                 coin.market_cap_change_percentage_24h > 0 ? (
                                                     <div className="inline-flex items-center text-base font-semibold text-green-700 ">
@@ -92,10 +96,10 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
                                                     </div>
                                                 )
                                             }
-                                            <div className="inline-flex items-center pl-10 text-base font-semibold text-gray-900 dark:text-white">
+                                            <div className="inline-flex items-center pl-5 text-base font-semibold text-gray-900 dark:text-white">
                                                 $ {coin.current_price}
                                             </div>
-                                            <div className="inline-flex items-center pl-10 text-base font-semibold text-[#FFDD00]">
+                                            <div className="inline-flex items-center pl-5 text-base font-semibold text-[#FFDD00]">
                                                 $ {coin.market_cap}
                                             </div>
                                         </div>
