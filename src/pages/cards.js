@@ -28,11 +28,12 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
                         Popular Cryptos
                        
                     </h5>
-                    <Button variant="outlined" style={{
+                    {user ? (<Button variant="outlined" style={{
                                                         color: "#ffa500",
                                                         border: "1px solid white",
                                                        
-                                                    }} >Login to Add to WatchList</Button>
+                                                    }} >Login to Add to WatchList</Button>):''}
+                    
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
                     </h5>
                     <form>
@@ -76,7 +77,6 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
                                                         <Button variant="outlined" onClick={watchList.includes(coin.id) ?(event) => removeFromWatchlist(event, coin.id) : (event) => addToWatchlist(event, coin.id)} style={{
                                                             color:  watchList.includes(coin.id) ? "#FF0000" : "#ffa500", 
                                                             border: "1px solid white",
-                                                            width:"20px",
                                                         }}>
                                                             {watchList.includes(coin.id) ? "Remove from Watchlist" : "Add to Watchlist"}
                                                         </Button>
