@@ -23,7 +23,7 @@ function LoginModal() {
   
   return (
     <>
-        <button onClick={handleOpenlogin} className="block py-2 pl-3 pr-4 rounded text-xl text-white">login</button>
+        <button onClick={handleOpenlogin} style={{border:"1px solid black"}}className="block p-2 rounded text-xl text-black">Login</button>
                       <Modal
                       open={openlogin}
                       onClose={handleCloselogin}

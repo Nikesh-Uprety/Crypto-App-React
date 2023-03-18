@@ -5,8 +5,9 @@ import { auth, db } from "../index"
 import { signOut } from 'firebase/auth';
 import LoginModal from '../modal/loginmodal';
 import { doc, getDoc } from 'firebase/firestore';
+import { MdDeleteForever } from 'react-icons/md';
 
-const Sidebar = ({ user, watchList, CoinsData }) => {
+const Sidebar = ({ user, watchList, CoinsData, removeFromWatchlist }) => {
     const SignOut = () => {
         signOut(auth);
     }
@@ -29,8 +30,9 @@ const Sidebar = ({ user, watchList, CoinsData }) => {
                     {user ? (<><Avatar onClick={toggleDrawer(anchor, true)}
                         style={{
                             cursor: "pointer",
-                            height: "38",
-                            width: "38",
+                            height: "32",
+                            width: "33",
+                            color:"white",
                         }}
                         src={user.photoURL}
                         alt={user.DisplayName || user.email} />
@@ -47,7 +49,7 @@ const Sidebar = ({ user, watchList, CoinsData }) => {
                                 display: "flex",
                                 flexDirection: "column",
                                 fontFamily: "monospace",
-                                backgroundColor: "3e3d3dd9"
+                                backgroundColor: "#000000ed"
                             }}>
                                 <div style={{
                                     flex: 1,
@@ -71,6 +73,7 @@ const Sidebar = ({ user, watchList, CoinsData }) => {
                                     />
                                     <span
                                         style={{
+                                            color:"white",
                                             width: "100%",
                                             fontSize: 25,
                                             textAlign: "center",
@@ -99,23 +102,32 @@ const Sidebar = ({ user, watchList, CoinsData }) => {
                                             Watchlist
                                         </span>
                                         {CoinsData.map((coin) => {
-                                        
-                                          if (watchList.includes(coin.id))
+
+                                            if (watchList.includes(coin.id))
                                                 return (
                                                     <div style={{
-                                                                padding: 10,
-                                                                borderRadius: 5,
-                                                                color: "black",
-                                                                width: "100%",
-                                                                display: "flex",
-                                                                justifyContent: "space-between",
-                                                                alignItems: "center",
-                                                                backgroundColor: "#EEBC1D",
-                                                                boxShadow: "0 0 3px black",
-                                                            }}>
-                                                        {coin.name}
-                                                        
-                                                        
+                                                        padding: 10,
+                                                        borderRadius: 5,
+                                                        color: "black",
+                                                        width: "100%",
+                                                        display: "flex",
+                                                        justifyContent: "space-between",
+                                                        alignItems: "center",
+                                                        backgroundColor: "white",
+                                                        boxShadow: "0 0 7px black",
+                                                    }}>
+                                                        <span className='text-sm font-bold' > {coin.name}</span>
+                                                        <span className='text-sm font-bold text-green-600' style={{ display: "flex", gap: 8 }}>
+        
+                                                            $ {coin.current_price.toFixed(2)}
+                                                            <MdDeleteForever
+                                                                style={{ cursor: "pointer" }}
+                                                                fontSize="16"
+                                                                color='red'
+
+                                                                onClick={(event) => removeFromWatchlist(event, coin.id)}
+                                                            />
+                                                        </span>
                                                     </div>
                                                 );
                                             else return <></>;
@@ -126,11 +138,14 @@ const Sidebar = ({ user, watchList, CoinsData }) => {
                                 </div>
                                 <Button
                                     variant="contained"
+                                        
                                     onClick={SignOut}
                                     style={{
+
                                         height: "8%",
+                                        border:"2px solid white",
                                         width: "100%",
-                                        backgroundColor: "#EEBC1D",
+                                        backgroundColor: "#141313eb",
                                         marginTop: 20,
                                     }}
                                 >

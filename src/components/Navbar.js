@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 
-const Navbar = ({ user,CoinsData,watchList }) => {
+const Navbar = ({ user,CoinsData,watchList,removeFromWatchlist }) => {
   return (
     <>
 
@@ -37,6 +37,8 @@ const Navbar = ({ user,CoinsData,watchList }) => {
             <li className="block py-2 pl-3 pr-4 text-xl text-white">
               
               <Sidebar 
+
+              removeFromWatchlist={removeFromWatchlist}
               user={user} 
               CoinsData={CoinsData}
               watchList={watchList}

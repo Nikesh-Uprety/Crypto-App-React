@@ -4,6 +4,7 @@ import {auth, db} from './index'
 import Cards from "./pages/cards";
 import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from "firebase/auth";
+import NewNavBar from "./components/NewNavbar";
 
 
 
@@ -12,7 +13,8 @@ function App() {
   let [user,setuser]=useState(null);
   const [watchList, setWatchlist] = useState([]);
 
-    
+console.log(Coins);
+
   useEffect(() => {
     fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h')
       .then(response => response.json())
@@ -77,11 +79,18 @@ useEffect(() => {
   return (
     <> 
     <getWatchlist user={user} />
-    <Navbar 
+    <NewNavBar
+    removeFromWatchlist={removeFromWatchlist}
     user={user} 
     CoinsData={Coins}
     watchList={watchList}
     />
+    {/* <Navbar 
+    removeFromWatchlist={removeFromWatchlist}
+    user={user} 
+    CoinsData={Coins}
+    watchList={watchList}
+    /> */}
     <div className="flex justify-center">
     <Cards 
     watchList={watchList}

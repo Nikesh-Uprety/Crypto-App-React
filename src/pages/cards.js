@@ -1,9 +1,5 @@
 import { useState, useEffect } from "react"
 import { Button } from "@mui/material";
-import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
-import { db } from '../index';
-import axios from "axios";
-import Sidebar from "../components/Sidebar";
 
 
 const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlist}) => {
@@ -25,13 +21,11 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
 
     return (
 
-        <>
-                
-            <div className="w-full p-4 mt-24 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+        <> 
+            <div className="w-full mt-[65px] bg-white border border-gray-200 shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex items-center justify-between mb-4">
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                        Watchlist list 
-                        
+                        Popular Cryptos
                        
                     </h5>
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
@@ -45,7 +39,7 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
                                     <span className="sr-only"></span>
                                 </button>
                                 <h5 className="text-xl font-bold leading-none pt-2 pl-12 text-gray-900 dark:text-white">
-                                    Change in Vol-24 / Current Price
+                                    Change in Vol-24 / Current Price / Market Cap
                  
                                 </h5>
                             </div>
@@ -69,6 +63,7 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
                                                 <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                                                     Current Market Rank: {coin.market_cap_rank}
                                                 </p>
+                                                
                                                 {
                                                     user ? (<>
                                                         <Button variant="outlined" onClick={watchList.includes(coin.id) ?(event) => removeFromWatchlist(event, coin.id) : (event) => addToWatchlist(event, coin.id)} style={{
@@ -100,6 +95,9 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
                                             <div className="inline-flex items-center pl-10 text-base font-semibold text-gray-900 dark:text-white">
                                                 $ {coin.current_price}
                                             </div>
+                                            <div className="inline-flex items-center pl-10 text-base font-semibold text-[#FFDD00]">
+                                                $ {coin.market_cap}
+                                            </div>
                                         </div>
                                     </li>
                                 ))
@@ -115,6 +113,21 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
                                                 <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                                                     {coin.name}
                                                 </p>
+                                                {
+                                                    user ? (<>
+                                                        <Button variant="outlined" onClick={watchList.includes(coin.id) ?(event) => removeFromWatchlist(event, coin.id) : (event) => addToWatchlist(event, coin.id)} style={{
+                                                            color:  watchList.includes(coin.id) ? "#FF0000" : "#ffa500", 
+                                                            border: "1px solid white"
+                                                        }}>
+                                                            {watchList.includes(coin.id) ? "Remove from Watchlist" : "Add to Watchlist"}
+                                                        </Button>
+                                                    </>
+                                                    ) : (<Button variant="outlined" style={{
+                                                        color: "#ffa500",
+                                                        border: "1px solid white"
+                                                    }} >Login To Add to Watchlist</Button>)
+                                                }
+
                                                 <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                                                     Current Market Rank: {coin.market_cap_rank}
                                                 </p>
