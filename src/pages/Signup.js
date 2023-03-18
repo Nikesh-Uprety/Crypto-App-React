@@ -18,9 +18,9 @@ export default function Signup() {
     const createUser = async () => {
             if (password == cpassword){
                 await createUserWithEmailAndPassword(getAuth(), email, password);
-                navigate('/home');
+                navigate('/');
             }else{
-                seterror("Password Doesnot Match")
+                seterror("Password Does Not Match")
             }
     }
 
