@@ -64,7 +64,7 @@ export default function Login() {
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                 Don’t have an account yet?
                                 
-                                    <button className="font-medium text-primary-600 hover:underline dark:text-primary-500"><Signupmodal/></button>
+                                    <button className="font-medium text-yellow-500 "><Signupmodal/></button>
                                 
                             </p>
                         </form>

@@ -2,11 +2,11 @@ import { useState, useEffect } from "react"
 import { Button } from "@mui/material";
 
 
-const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlist}) => {
+const Cards = ({ CoinsData, user, addToWatchlist, watchList, removeFromWatchlist }) => {
 
     const [searchQuery, setSearchQuery] = useState("");
     const [searchCoins, setSearchCoins] = useState([]);
-    
+
 
     // For Search Function
     useEffect(() => {
@@ -21,21 +21,16 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
 
     return (
 
-        <> 
+        <>
             <div className="w-full mt-[65px] bg-white border border-gray-200 shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex items-center justify-between mb-4">
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
                         Popular Cryptos
-                       
+
                     </h5>
-                    {user ? (<Button variant="outlined" style={{
-                                                        color: "#ffa500",
-                                                        border: "1px solid white",
-                                                       
-                                                    }} >Login to Add to WatchList</Button>):''}
-                    
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
                     </h5>
+                   
                     <form>
                         <div className="flex">
                             <div className="relative w-full">
@@ -45,8 +40,11 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
                                     <span className="sr-only"></span>
                                 </button>
                                 <h5 className="text-xl font-bold leading-none pt-2 pl-12 text-gray-900 dark:text-white">
-                                    Change in Vol-24 / Current Price / Market Cap
-                 
+                                    Change in Vol-24 / Current Price <p className="hidden float-right m-2 md:block">
+                                     /Market Cap
+                                    </p>
+                                    
+
                                 </h5>
                             </div>
                         </div>
@@ -54,36 +52,41 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
                 </div>
                 <div className="flow-root">
                     <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {
+                        user ? "" : ((<Button variant="outlined" style={{
+                            color: "#ffa500",
+                            border: "1px solid white"
+                        }} >Login To Add to Watchlist</Button>))
+                    }
                         {
                             searchQuery.length === 0 ? (
                                 CoinsData.map((coin) => (
-                                    <li className="py-1 sm:py-4" key={coin.id}>
-                                        <div className="flex items-center">
+                                    <li className="py-3 sm:py-4" key={coin.id}>
+                                        <div className="flex items-center space-x-1">
                                             <div className="flex-shrink-0">
                                                 <img src={coin.image} className="w-8 h-8 rounded-full" alt={coin.name} />
                                             </div>
-                                            <div className="flex-1 min-w-0 ">
+                                            <div className="flex-1 min-w-0">
                                                 <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                                                     {coin.name}
                                                 </p>
                                                 <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                                                     Current Market Rank: {coin.market_cap_rank}
                                                 </p>
-                                            </div>
 
-                                                
                                                 {
                                                     user ? (<>
-                                                        <Button variant="outlined" onClick={watchList.includes(coin.id) ?(event) => removeFromWatchlist(event, coin.id) : (event) => addToWatchlist(event, coin.id)} style={{
-                                                            color:  watchList.includes(coin.id) ? "#FF0000" : "#ffa500", 
-                                                            border: "1px solid white",
+                                                        <Button variant="outlined" onClick={watchList.includes(coin.id) ? (event) => removeFromWatchlist(event, coin.id) : (event) => addToWatchlist(event, coin.id)} style={{
+                                                            color: watchList.includes(coin.id) ? "#FF0000" : "#ffa500",
+                                                            border: "1px solid white"
                                                         }}>
                                                             {watchList.includes(coin.id) ? "Remove from Watchlist" : "Add to Watchlist"}
                                                         </Button>
                                                     </>
-                                                    ) : ("")
+                                                    ) : ""
                                                 }
 
+                                            </div>
                                             {
                                                 coin.market_cap_change_percentage_24h > 0 ? (
                                                     <div className="inline-flex items-center text-base font-semibold text-green-700 ">
@@ -96,11 +99,13 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
                                                     </div>
                                                 )
                                             }
-                                            <div className="inline-flex items-center pl-5 text-base font-semibold text-gray-900 dark:text-white">
+                                            <div className="inline-flex items-center pl-10 text-base font-semibold text-gray-900 dark:text-white">
                                                 $ {coin.current_price}
                                             </div>
-                                            <div className="inline-flex items-center pl-5 text-base font-semibold text-[#FFDD00]">
+                                            <div className="hidden md:block">
+                                            <div className="inline-flex items-center pl-10 text-base font-semibold text-[#FFDD00]">
                                                 $ {coin.market_cap}
+                                            </div>
                                             </div>
                                         </div>
                                     </li>
@@ -119,8 +124,8 @@ const Cards = ({ CoinsData, user, addToWatchlist , watchList, removeFromWatchlis
                                                 </p>
                                                 {
                                                     user ? (<>
-                                                        <Button variant="outlined" onClick={watchList.includes(coin.id) ?(event) => removeFromWatchlist(event, coin.id) : (event) => addToWatchlist(event, coin.id)} style={{
-                                                            color:  watchList.includes(coin.id) ? "#FF0000" : "#ffa500", 
+                                                        <Button variant="outlined" onClick={watchList.includes(coin.id) ? (event) => removeFromWatchlist(event, coin.id) : (event) => addToWatchlist(event, coin.id)} style={{
+                                                            color: watchList.includes(coin.id) ? "#FF0000" : "#ffa500",
                                                             border: "1px solid white"
                                                         }}>
                                                             {watchList.includes(coin.id) ? "Remove from Watchlist" : "Add to Watchlist"}

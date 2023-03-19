@@ -23,7 +23,7 @@ const Signupmodal=()=> {
   
   return (
     <>
-        <button onClick={handleOpensignup} className="block pl-3 rounded text-xl text-white">SignUp</button>
+        <button onClick={handleOpensignup} className="block pl-3 rounded text-xl text-yellow-300">SignUp</button>
     <Modal
     open={opensignup}
     onClose={handleClosesignup}
