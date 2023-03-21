@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react"
-import { Button } from "@mui/material";
+import { Button, Pagination } from "@mui/material";
+import AlertFunction from "../components/Alert";
 
-
-const Cards = ({ CoinsData, user, addToWatchlist, watchList, removeFromWatchlist }) => {
+const Cards = ({ CoinsData, user, addToWatchlist, watchList, removeFromWatchlist, setAlert }) => {
 
     const [searchQuery, setSearchQuery] = useState("");
     const [searchCoins, setSearchCoins] = useState([]);
+
+    //For Pagination
+    const [page, setPage] = useState(1);
 
 
     // For Search Function
@@ -14,13 +17,13 @@ const Cards = ({ CoinsData, user, addToWatchlist, watchList, removeFromWatchlist
             fetch(`https://api.coingecko.com/api/v3/search?query=${searchQuery}`)
                 .then(response => response.json())
                 .then(data => setSearchCoins(data.coins));
+            console.log("Data has been Fetched!")
         } else {
             setSearchCoins([]);
         }
     }, [searchQuery]);
 
     return (
-
         <>
             <div className="w-full mt-[65px] bg-white border border-gray-200 shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex items-center justify-between mb-4">
@@ -30,7 +33,7 @@ const Cards = ({ CoinsData, user, addToWatchlist, watchList, removeFromWatchlist
                     </h5>
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
                     </h5>
-                   
+
                     <form>
                         <div className="flex">
                             <div className="relative w-full">
@@ -41,10 +44,8 @@ const Cards = ({ CoinsData, user, addToWatchlist, watchList, removeFromWatchlist
                                 </button>
                                 <h5 className="text-xl font-bold leading-none pt-2 pl-12 text-gray-900 dark:text-white">
                                     Change in Vol-24 / Current Price <p className="hidden float-right m-2 md:block">
-                                     /Market Cap
+                                        /Market Cap
                                     </p>
-                                    
-
                                 </h5>
                             </div>
                         </div>
@@ -52,63 +53,67 @@ const Cards = ({ CoinsData, user, addToWatchlist, watchList, removeFromWatchlist
                 </div>
                 <div className="flow-root">
                     <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
-                    {
-                        user ? "" : ((<Button variant="outlined" style={{
-                            color: "#ffa500",
-                            border: "1px solid white"
-                        }} >Login To Add to Watchlist</Button>))
-                    }
+                        {
+                            user ? "" : ((<Button variant="outlined" style={{
+                                color: "#ffa500",
+                                border: "1px solid white"
+                            }} >Login To Add to Watchlist</Button>))
+                        }
                         {
                             searchQuery.length === 0 ? (
-                                CoinsData.map((coin) => (
-                                    <li className="py-3 sm:py-4" key={coin.id}>
-                                        <div className="flex items-center space-x-1">
-                                            <div className="flex-shrink-0">
-                                                <img src={coin.image} className="w-8 h-8 rounded-full" alt={coin.name} />
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                                    {coin.name}
-                                                </p>
-                                                <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                                    Current Market Rank: {coin.market_cap_rank}
-                                                </p>
+                                CoinsData.slice((page - 1) * 7, (page - 1) * 7 + 7).map((coin) => (
+                                    <>
+                                        <li className="py-3 sm:py-4" key={coin.id}>
+                                            <div className="flex items-center space-x-1">
+                                                <div className="flex-shrink-0">
+                                                    <img src={coin.image} className="w-8 h-8 rounded-full" alt={coin.name} />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                                        {coin.name}
+                                                    </p>
+                                                    <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+                                                        Current Market Rank: {coin.market_cap_rank}
+                                                    </p>
 
+                                                    {
+                                                        user ? (<>
+                                                            <Button variant="outlined" onClick={watchList.includes(coin.id) ? (event) => removeFromWatchlist(event, coin.id) : (event) => addToWatchlist(event, coin.id)} style={{
+                                                                color: watchList.includes(coin.id) ? "#FF0000" : "#ffa500",
+                                                                border: "1px solid white"
+                                                            }}>
+                                                                {watchList.includes(coin.id) ? "Remove from Watchlist" : "Add to Watchlist"}
+                                                            </Button>
+                                                        </>
+                                                        ) : ""
+                                                    }
+
+                                                </div>
                                                 {
-                                                    user ? (<>
-                                                        <Button variant="outlined" onClick={watchList.includes(coin.id) ? (event) => removeFromWatchlist(event, coin.id) : (event) => addToWatchlist(event, coin.id)} style={{
-                                                            color: watchList.includes(coin.id) ? "#FF0000" : "#ffa500",
-                                                            border: "1px solid white"
-                                                        }}>
-                                                            {watchList.includes(coin.id) ? "Remove from Watchlist" : "Add to Watchlist"}
-                                                        </Button>
-                                                    </>
-                                                    ) : ""
+                                                    coin.market_cap_change_percentage_24h > 0 ? (
+                                                        <div className="inline-flex items-center text-base font-semibold text-green-700 ">
+                                                            {coin.market_cap_change_percentage_24h.toFixed(2)} %
+                                                        </div>
+                                                    ) : (
+                                                        <div className="inline-flex items-center text-base font-semibold text-red-500">
+
+                                                            {coin.market_cap_change_percentage_24h.toFixed(2)} %
+                                                        </div>
+                                                    )
                                                 }
-
-                                            </div>
-                                            {
-                                                coin.market_cap_change_percentage_24h > 0 ? (
-                                                    <div className="inline-flex items-center text-base font-semibold text-green-700 ">
-                                                        {coin.market_cap_change_percentage_24h.toFixed(2)} %
+                                                <div className="inline-flex items-center pl-10 text-base font-semibold text-gray-900 dark:text-white">
+                                                    $ {coin.current_price}
+                                                </div>
+                                                <div className="hidden md:block">
+                                                    <div className="inline-flex items-center pl-10 text-base font-semibold text-[#FFDD00]">
+                                                        $ {coin.market_cap}
                                                     </div>
-                                                ) : (
-                                                    <div className="inline-flex items-center text-base font-semibold text-red-500">
+                                                </div>
+                                            </div>
+                                        </li>
+                                        
 
-                                                        {coin.market_cap_change_percentage_24h.toFixed(2)} %
-                                                    </div>
-                                                )
-                                            }
-                                            <div className="inline-flex items-center pl-10 text-base font-semibold text-gray-900 dark:text-white">
-                                                $ {coin.current_price}
-                                            </div>
-                                            <div className="hidden md:block">
-                                            <div className="inline-flex items-center pl-10 text-base font-semibold text-[#FFDD00]">
-                                                $ {coin.market_cap}
-                                            </div>
-                                            </div>
-                                        </div>
-                                    </li>
+                                    </>
                                 ))
 
                             ) : (
@@ -149,6 +154,22 @@ const Cards = ({ CoinsData, user, addToWatchlist, watchList, removeFromWatchlist
                         }
 
                     </ul>
+                    <Pagination
+                                            count={parseInt((CoinsData?.length / 7).toFixed(0))}
+                                            style={{
+                                                padding: 10,
+                                                width: "100%",
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                backgroundColor:"#ffe600",
+                                                borderRadius:5
+                                            }}
+                                            // classes={{ ul: classes.pagination }}
+                                            onChange={(_, value) => {
+                                                setPage(value);
+                                                window.scroll(0, 450);
+                                            }}
+                                        />
                 </div>
             </div>
 

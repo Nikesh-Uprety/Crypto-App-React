@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useState } from 'react';
-import Signup from '../pages/Signup';
+import Signup from '../components/Signup';
 
 const Signupmodal=()=> {
     const [opensignup, setOpensignup] = useState(false);

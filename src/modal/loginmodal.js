@@ -4,7 +4,7 @@ import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 import Login from '../pages/Login';
 
-function LoginModal() {
+function LoginModal({setAlert}) {
     const [openlogin, setOpenlogin] = useState(false);
     const handleOpenlogin = () => setOpenlogin(true);
     const handleCloselogin = () => setOpenlogin(false);
@@ -20,7 +20,7 @@ function LoginModal() {
       boxShadow: 24,
       p: 4,
     };
-  
+
   return (
     <>
         <button onClick={handleOpenlogin} style={{border:"1px solid black"}}className="block p-2 rounded text-xl text-black">Login</button>
@@ -31,7 +31,7 @@ function LoginModal() {
                       aria-describedby="modal-modal-description"
                     >
                       <Box sx={style}>
-                        <Login />
+                        <Login setAlert={setAlert}/>
                       </Box>
                     </Modal>
     </>

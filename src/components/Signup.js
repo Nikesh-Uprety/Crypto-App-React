@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import './login.css'
+import '../pages/login.css';
 import { useState } from 'react';
 import Signupmodal from '../modal/signupmodal';
 import LoginModal from '../modal/loginmodal';

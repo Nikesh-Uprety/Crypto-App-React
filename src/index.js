@@ -7,7 +7,7 @@ import About from './pages/about';
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import Login from './pages/Login';
-import Signup from './pages/Signup';
+import Signup from './components/Signup';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 

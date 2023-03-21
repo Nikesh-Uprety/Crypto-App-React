@@ -1,9 +1,8 @@
-import Navbar from "../components/Navbar"
 import NewNavbar from "../components/NewNavbar"
 const About=()=>{
     return(
         <>
-        <Navbar />
+        <NewNavbar />
         <div>This is about page</div>
         </>
     )

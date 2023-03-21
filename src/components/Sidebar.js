@@ -7,7 +7,7 @@ import LoginModal from '../modal/loginmodal';
 import { doc, getDoc } from 'firebase/firestore';
 import { MdDeleteForever } from 'react-icons/md';
 
-const Sidebar = ({ user, watchList, CoinsData, removeFromWatchlist }) => {
+const Sidebar = ({ user, watchList, CoinsData, removeFromWatchlist,setAlert }) => {
     const SignOut = () => {
         signOut(auth);
     }
@@ -154,7 +154,9 @@ const Sidebar = ({ user, watchList, CoinsData, removeFromWatchlist }) => {
 
                             </div>
                         </Drawer></>) : (
-                        <LoginModal />
+                        <LoginModal 
+                        setAlert={setAlert}
+                        />
                     )}
                 </React.Fragment>
             ))}

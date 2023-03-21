@@ -20,7 +20,8 @@ import LoginModal from '../modal/loginmodal';
 import Login from '../pages/Login';
 import AddToHomeScreenIcon from '@mui/icons-material/AddToHomeScreen';
 
-export default function NewNavBar({ user, CoinsData, watchList, removeFromWatchlist }) {
+export default function NewNavBar({ user, CoinsData, watchList, removeFromWatchlist,setAlert }) {
+  console.log(typeof(setAlert))
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -150,14 +151,16 @@ export default function NewNavBar({ user, CoinsData, watchList, removeFromWatchl
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } ,color:"Black"} }
           >
-            <LoginModal/>
+            <LoginModal
+            setAlert={setAlert}
+            />
           </Typography>
             )}
            
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <Sidebar
-
+              setAlert={setAlert}
               removeFromWatchlist={removeFromWatchlist}
               user={user}
               CoinsData={CoinsData}

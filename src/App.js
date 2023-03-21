@@ -1,20 +1,53 @@
 import { useState, useEffect } from "react";
-import Navbar from "./components/Navbar";
 import {auth, db} from './index'
 import Cards from "./pages/cards";
 import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from "firebase/auth";
 import NewNavBar from "./components/NewNavbar";
-
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 
 function App() {
   let [Coins, setcoins] = useState([]);
   let [user,setuser]=useState(null);
   const [watchList, setWatchlist] = useState([]);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    type: "success",
+    time:3000,
+  });
 
-console.log(Coins);
-
+  const AlertFunction = () => {
+    const handleCloseAlert = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setAlert({ open: false });
+    };
+  
+    return (
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={alert.time}
+        onClose={handleCloseAlert}
+      >
+        <MuiAlert
+          onClose={handleCloseAlert}
+          elevation={10}
+          variant="filled"
+          severity={alert.type}
+        >
+          {alert.message}
+        </MuiAlert>
+      </Snackbar>
+    );
+  };
+  
   useEffect(() => {
     fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h')
       .then(response => response.json())
@@ -23,8 +56,12 @@ console.log(Coins);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (user) setuser(user);
-      else setuser(null);
+      if (user) {
+        setuser(user)
+        console.log(`Welcome ${user.email}`);
+      }else {
+        setuser(null)
+      };
     });
   }, []);
 
@@ -36,7 +73,13 @@ console.log(Coins);
             { Coins: watchList ? [...watchList, coin] : [coin] },
             { merge: true }
         );
-        console.log(`Successfully Added ${coin}`)
+        setAlert({
+          open: true,
+          message: `Successfully Added ${coin}`,
+          type: "success",
+          time:1500,
+      })
+
     } catch (e) {
         console.log(e);
     }
@@ -68,6 +111,12 @@ useEffect(() => {
         { Coins: watchList.filter((wish) => wish !== coin) },
         { merge: true }
         );
+        setAlert({
+          open: true,
+          message: `Successfully Removed ${coin}`,
+          type: "error",
+          time:1500,
+      })
         console.log("removed succesfull");
 
     } catch (error) {
@@ -80,17 +129,12 @@ useEffect(() => {
     <> 
     <getWatchlist user={user} />
     <NewNavBar
+    setAlert={setAlert}
     removeFromWatchlist={removeFromWatchlist}
     user={user} 
     CoinsData={Coins}
     watchList={watchList}
     />
-    {/* <Navbar 
-    removeFromWatchlist={removeFromWatchlist}
-    user={user} 
-    CoinsData={Coins}
-    watchList={watchList}
-    /> */}
     <div className="flex justify-center">
     <Cards 
     watchList={watchList}
@@ -98,8 +142,10 @@ useEffect(() => {
     addToWatchlist={addToWatchlist}
     CoinsData={Coins}
     user={user}
+    setAlert={setAlert}
     />
     </div>
+    <AlertFunction/>
     </>
   );
 }
