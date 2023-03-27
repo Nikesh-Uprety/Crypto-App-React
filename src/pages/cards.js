@@ -1,23 +1,32 @@
 import { useState, useEffect } from "react"
 import { Button, Pagination } from "@mui/material";
 import AlertFunction from "../components/Alert";
-
+import CircularIndeterminate from '../components/circularloader'
 const Cards = ({ CoinsData, user, addToWatchlist, watchList, removeFromWatchlist, setAlert }) => {
 
-    const [searchQuery, setSearchQuery] = useState("");
-    const [searchCoins, setSearchCoins] = useState([]);
-
+    let [searchQuery, setSearchQuery] = useState("");
+    let [searchCoins, setSearchCoins] = useState([]);
+    let[loading, setloading]=useState(false)
+    console.log(searchQuery);
     //For Pagination
     const [page, setPage] = useState(1);
+    // console.log(CoinsData);
+
 
 
     // For Search Function
     useEffect(() => {
         if (searchQuery.length > 0) {
+            setloading(true);
             fetch(`https://api.coingecko.com/api/v3/search?query=${searchQuery}`)
                 .then(response => response.json())
-                .then(data => setSearchCoins(data.coins));
-            console.log("Data has been Fetched!")
+                .then(data => 
+                    {
+                        setSearchCoins(data.coins)
+                        console.log("Data has been Fetched!")
+                        setloading(false);
+                        
+                    });
         } else {
             setSearchCoins([]);
         }
@@ -38,10 +47,19 @@ const Cards = ({ CoinsData, user, addToWatchlist, watchList, removeFromWatchlist
                         <div className="flex">
                             <div className="relative w-full">
                                 <input type="search" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} id="search-dropdown" className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Search your favorite crypto..." required />
-                                <button type="submit" className="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                    <svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                
+                                {loading ? (  <button type="submit" className="absolute top-0 right-0 bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                <CircularIndeterminate />
+                                </button>):(<button type="submit" className="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                
+
+                                <svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                                     <span className="sr-only"></span>
-                                </button>
+    
+                                    
+                                </button>)}
+                              
+                                
                                 <h5 className="text-xl font-bold leading-none pt-2 pl-12 text-gray-900 dark:text-white">
                                     Change in Vol-24 / Current Price <p className="hidden float-right m-2 md:block">
                                         /Market Cap
@@ -60,15 +78,16 @@ const Cards = ({ CoinsData, user, addToWatchlist, watchList, removeFromWatchlist
                             }} >Login To Add to Watchlist</Button>))
                         }
                         {
+                           
                             searchQuery.length === 0 ? (
                                 CoinsData.slice((page - 1) * 7, (page - 1) * 7 + 7).map((coin) => (
                                     <>
-                                        <li className="py-3 sm:py-4" key={coin.id}>
-                                            <div className="flex items-center space-x-1">
+                                        <li className="py-3 sm:py-4" key={coin.current_price}>
+                                            <div className="flex items-center space-x-1" >
                                                 <div className="flex-shrink-0">
                                                     <img src={coin.image} className="w-8 h-8 rounded-full" alt={coin.name} />
                                                 </div>
-                                                <div className="flex-1 min-w-0">
+                                                <div className="flex-1 min-w-0" >
                                                     <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                                                         {coin.name}
                                                     </p>

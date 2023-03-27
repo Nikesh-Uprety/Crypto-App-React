@@ -5,14 +5,14 @@ import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from "firebase/auth";
 import NewNavBar from "./components/NewNavbar";
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-
+import LinearIndeterminate from './components/loader';
 
 function App() {
   let [Coins, setcoins] = useState([]);
   let [user,setuser]=useState(null);
+  let [loading,setloading]=useState(false);
   const [watchList, setWatchlist] = useState([]);
   const [alert, setAlert] = useState({
     open: false,
@@ -20,6 +20,7 @@ function App() {
     type: "success",
     time:3000,
   });
+
 
   const AlertFunction = () => {
     const handleCloseAlert = (event, reason) => {
@@ -49,9 +50,14 @@ function App() {
   };
   
   useEffect(() => {
+    setloading(true);
     fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h')
       .then(response => response.json())
-      .then(data => setcoins(data));
+      .then(data => {
+        setcoins(data);
+        setloading(false);
+      });
+
   }, []);
 
   useEffect(() => {
@@ -135,6 +141,8 @@ useEffect(() => {
     CoinsData={Coins}
     watchList={watchList}
     />
+    {loading && <LinearIndeterminate/>}
+      
     <div className="flex justify-center">
     <Cards 
     watchList={watchList}
