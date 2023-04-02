@@ -80,7 +80,7 @@ const Cards = ({ CoinsData, user, addToWatchlist, watchList, removeFromWatchlist
                         {
                            
                             searchQuery.length === 0 ? (
-                                CoinsData.slice((page - 1) * 7, (page - 1) * 7 + 7).map((coin) => (
+                                CoinsData.slice((page - 1) * 6, (page - 1) * 6 + 6).map((coin) => (
                                     <>
                                         <li className="py-3 sm:py-4" key={coin.current_price}>
                                             <div className="flex items-center space-x-1" >
@@ -174,7 +174,7 @@ const Cards = ({ CoinsData, user, addToWatchlist, watchList, removeFromWatchlist
 
                     </ul>
                     <Pagination
-                                            count={parseInt((CoinsData?.length / 7).toFixed(0))}
+                                            count={parseInt((CoinsData?.length / 6).toFixed(0))}
                                             style={{
                                                 padding: 10,
                                                 width: "100%",
